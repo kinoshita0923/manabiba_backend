@@ -16,6 +16,6 @@ func main() {
   // 静的サイトを返すルーティングの設定
   e.Static("/", "../../frontend/dist/")
 
-  // サーバーをポート番号1323で起動
-  e.Logger.Fatal(e.Start(":1323"))
+  // サーバーをポート番号80で起動
+  e.Logger.Fatal(e.Start(":80"))
 }
