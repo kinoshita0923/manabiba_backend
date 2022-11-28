@@ -1,4 +1,4 @@
-# manabiba
+# manabiba_backend
 
 ## gitmojiの使用例
 ```
