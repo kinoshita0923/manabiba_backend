@@ -14,7 +14,7 @@ func main() {
   e.Use(middleware.Recover())
 
   // 静的サイトを返すルーティングの設定
-  e.Static("/", "../../frontend/dist/")
+  e.Static("/", "./frontend/dist/")
 
   // サーバーをポート番号8080で起動
   e.Logger.Fatal(e.Start(":8080"))
