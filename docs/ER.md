@@ -48,4 +48,11 @@ erDiagram
         int content_id
         int user_id
     }
+
+    groups||--|{users: ""
+    users||--o{points: ""
+    users}o--o{subjects: ""
+    users||--o{contents: ""
+    users||--o|goods: ""
+    contents||--o{goods: ""
 ```
