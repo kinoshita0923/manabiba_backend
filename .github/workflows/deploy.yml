@@ -21,4 +21,3 @@ jobs:
             cd ${{ secrets.SERVER_DEPLOY_DIR }}
             sudo su
             git pull origin main
-            nohup go run src/router/router.go &
