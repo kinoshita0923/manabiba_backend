@@ -21,3 +21,4 @@ jobs:
             cd ${{ secrets.SERVER_DEPLOY_DIR }}
             sudo su
             git pull origin main
+            redoc-cli bundle ./docs/spec.yml -o ./docs/index.html
