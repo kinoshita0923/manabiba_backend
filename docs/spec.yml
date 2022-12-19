@@ -1,0 +1,412 @@
+swagger: "2.0"
+info:
+  description: "これはmanabibaに関するAPIです。"
+  version: "1.0.0"
+  title: "manabiba API"
+  termsOfService: "http://swagger.io/terms/"
+paths:
+  /user/register/:
+    post:
+      summary: "アカウント新規登録API"
+      description: "送信されたデータをもとにアカウントを作成"
+      parameters:
+      - name: "user_name"
+        in: "formData"
+        description: "アカウントの名前"
+        required: true
+        type: "string"
+      - name: "user_password"
+        in: "formData"
+        description: "アカウントのパスワード"
+        required: true
+        type: "string"
+      - name: "email"
+        in: "formData"
+        description: "アカウントのメールアドレス"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "成功時のレスポンス"
+          schema:
+            type: "object"
+            properties:
+              user_id:
+                type: "integer"
+
+  /user/authentication/:
+    post:
+      summary: "認証API"
+      description: "ログインAPI"
+      parameters:
+      - name: "user_name"
+        in: "formData"
+        description: "アカウントの名前"
+        required: true
+        type: "string"
+      - name: "user_password"
+        in: "formData"
+        description: "アカウントのパスワード"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "成功時のレスポンス"
+
+  /user/check-login/:
+    get:
+      summary: "認証済みチェックAPI"
+      description: "ユーザは認証済みか確認するAPI"
+      responses:
+        200:
+          description: "成功時のレスポンス"
+
+  /group/register/:
+    post:
+      summary: "グループ新規登録API"
+      description: "送信されたデータをもとにグループを作成"
+      parameters:
+      - name: "group_name"
+        in: "formData"
+        description: "グループ名"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "成功時のレスポンス"
+
+  /group/participate/:
+    post:
+      summary: "グループ入会API"
+      description: "グループにユーザが入会するAPI"
+      parameters:
+      - name: "group_id"
+        in: "formData"
+        description: "グループID"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "成功時のレスポンス" 
+
+  /group/select/:
+    get:
+      summary: "グループ取得API"
+      description: "送信されたデータをもとにグループ情報を取得"
+
+      responses:
+        200:
+          description: "成功時のレスポンス" 
+
+  /group/quit/:
+    patch:
+      summary: "グループ退会API"
+      description: "グループからユーザが退会するAPI"
+      parameters:
+      - name: "group_id"
+        in: "formData"
+        description: "グループID"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "成功時のレスポンス"
+
+  /group/host-update/:
+    patch:
+      summary: "管理者引継ぎAPI"
+      description: "グループの管理者を引き継ぐAPI"
+      parameters:
+      - name: "user_id"
+        in: "formData"
+        description: "次のグループの管理者のユーザID"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "成功時のレスポンス"
+
+  /subject/register/:
+    post:
+      summary: "科目追加API"
+      description: "グループに科目を追加するAPI"
+      parameters:
+      - name: "subject_name"
+        in: "formData"
+        description: "追加する科目の名前"
+        required: true
+        type: "string"
+      - name: "grade"
+        in: "formData"
+        description: "履修した科目の対象学年"
+        required: true
+        type: "integer"
+      - name: "class"
+        in: "formData"
+        description: "履修した科目の対象クラス"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "成功時のレスポンス"
+
+  /subject/select/:
+    get:
+      summary: "科目検索API"
+      description: "送信されたデータをもとに科目を検索するAPI"
+      parameters:
+      - name: "subject_name"
+        in: "formData"
+        description: "検索対象の教科の名前"
+        required: false
+        type: "string"
+      - name: "class_id"
+        in: "formData"
+        description: "検索対象の教科の名前"
+        required: false
+        type: "string"
+      - name: "min_valuation"
+        in: "formData"
+        description: "検索対象の最低評価"
+        required: false
+        type: "number"
+      - name: "max_valuation"
+        in: "formData"
+        description: "検索対象の最高評価"
+        required: false
+        type: "number"
+      responses:
+        200:
+          description: "成功時のレスポンス"
+
+  /point/add-difference/:
+    post:
+      summary: "ポイント収支API"
+      description: "ポイントの変異を追加するAPI"
+      parameters:
+      - name: "difference"
+        in: "formData"
+        description: "ポイントの差異"
+        required: true
+        type: "integer"
+      - name: "content_id"
+        in: "formData"
+        description: "ポイントの収支源"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "成功時のレスポンス"
+
+  /content/comment/register/:
+    post:
+      summary: "口コミ追加API"
+      description: "コンテンツ(口コミ・過去問)を科目に追加するAPI"
+      parameters:
+      - name: "subject_id"
+        in: "formData"
+        description: "コンテンツが属する科目ID"
+        required: true
+        type: "integer"
+      - name: "valuation"
+        in: "formData"
+        description: "科目に対する評価"
+        required: false
+        type: "integer"
+      - name: "comment"
+        in: "formData"
+        description: "科目に対する口コミ"
+        required: false
+        type: "string"
+      - name: "nth_quarter"
+        in: "formData"
+        description: "定期テストの区別をするための値"
+        required: false
+        type: "integer"
+      - name: "teacher_name"
+        in: "formData"
+        description: "科目の担当教師名"
+        required: true
+        type: "string"
+      - name: "term"
+        in: "formData"
+        description: "受講期間"
+        required: true
+        type: "integer"
+      - name: "study_time"
+        in: "formData"
+        description: "自習時間"
+        required: false
+        type: "number"
+      responses:
+        200:
+          description: "成功時のレスポンス"
+
+  /content/comment/update/:
+    patch:
+      summary: "口コミ更新API"
+      description: "コンテンツ(口コミ・過去問)の情報を更新するAPI"
+      parameters:
+      - name: "content_id"
+        in: "formData"
+        description: "変更するコンテンツID"
+        required: true
+        type: "integer"
+      - name: "valuation"
+        in: "formData"
+        description: "科目に対する評価"
+        required: false
+        type: "integer"
+      - name: "comment"
+        in: "formData"
+        description: "科目に対する口コミ"
+        required: false
+        type: "string"
+      - name: "teacher_name"
+        in: "formData"
+        description: "科目の担当教師名"
+        required: false
+        type: "string"
+      - name: "term"
+        in: "formData"
+        description: "受講期間"
+        required: false
+        type: "integer"
+      - name: "study_time"
+        in: "formData"
+        description: "自習時間"
+        required: false
+        type: "number"
+      responses:
+        200:
+          description: "成功時のレスポンス"
+
+  /content/examination/register/:
+    post:
+      summary: "過去問追加API"
+      description: "コンテンツ(口コミ・過去問)を科目に追加するAPI"
+      parameters:
+      - name: "subject_id"
+        in: "formData"
+        description: "コンテンツが属する科目ID"
+        required: true
+        type: "integer"
+      - name: "nth_quarter"
+        in: "formData"
+        description: "定期テストの区別をするための値"
+        required: true
+        type: "integer"
+      - name: "examination_file"
+        in: "formData"
+        description: "過去問の問題画像"
+        required: true
+        type: "file"
+      - name: "answer_file"
+        in: "formData"
+        description: "過去問の問題画像"
+        required: false
+        type: "file"
+      - name: "teacher_name"
+        in: "formData"
+        description: "科目の担当教師名"
+        required: true
+        type: "string"
+      - name: "study_time"
+        in: "formData"
+        description: "自習時間"
+        required: false
+        type: "number"
+      responses:
+        200:
+          description: "成功時のレスポンス"
+
+  /content/examination/update/:
+    patch:
+      summary: "過去問更新API"
+      description: "コンテンツ(口コミ・過去問)の情報を更新するAPI"
+      parameters:
+      - name: "content_id"
+        in: "formData"
+        description: "変更するコンテンツID"
+        required: true
+        type: "integer"
+      - name: "nth_quarter"
+        in: "formData"
+        description: "定期テストの区別をするための値"
+        required: false
+        type: "integer"
+      - name: "examination_file"
+        in: "formData"
+        description: "過去問の問題画像"
+        required: false
+        type: "file"
+      - name: "answer_file"
+        in: "formData"
+        description: "過去問の問題画像"
+        required: false
+        type: "file"
+      - name: "teacher_name"
+        in: "formData"
+        description: "科目の担当教師名"
+        required: true
+        type: "string"
+      - name: "study_time"
+        in: "formData"
+        description: "自習時間"
+        required: false
+        type: "number"
+      responses:
+        200:
+          description: "成功時のレスポンス"
+
+  /content/select/:
+    get:
+      summary: "コンテンツ取得API"
+      description: "送信されたデータをもとにあてはまるコンテンツ(口コミ・過去問)を取得するAPI"
+      parameters:
+      - name: "subject_id"
+        in: "formData"
+        description: "コンテンツの対象の教科ID"
+        required: false
+        type: "integer"
+      responses:
+        200:
+          description: "成功時のレスポンス"
+
+  /content/delete/:
+    delete:
+      summary: "コンテンツ削除API"
+      description: "投稿ユーザーが指定したコンテンツ(口コミ・過去問)を削除するAPI"
+      parameters:
+      - name: "content_id"
+        in: "formData"
+        description: "削除するコンテンツID"
+        required: true
+        type: "integer"
+      - name: "content_flag"
+        in: "formData"
+        description: "口コミか過去問か識別するフラグ"
+        required: false
+        type: "integer"
+      responses:
+        200:
+          description: "成功時のレスポンス"
+
+  /good/:
+    put:
+      summary: "いいねAPI"
+      description: "指定したコンテンツ(口コミ・過去問)にいいねをするAPI"
+      parameters:
+      - name: "content_id"
+        in: "formData"
+        description: "ユーザがいいねするコンテンツID"
+        required: true
+        type: "integer"
+      - name: "user_id"
+        in: "formData"
+        description: "コンテンツをいいねしたユーザID"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "成功時のレスポンス"
