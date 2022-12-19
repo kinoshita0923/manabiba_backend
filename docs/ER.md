@@ -14,6 +14,12 @@ erDiagram
         boolean is_manager
     }
 
+    classes {
+        int class_id
+        int grade
+        varchar class_name
+    }
+
     points {
         int user_id
         int content_id
@@ -25,8 +31,7 @@ erDiagram
         int subject_id
         varchar subject_name
         int group_id
-        int grade
-        varchar class
+        int class_id
     }
 
     contents {
@@ -55,4 +60,5 @@ erDiagram
     users||--o{contents: ""
     users||--o|goods: ""
     contents||--o{goods: ""
+    subjects||--|{classes: ""
 ```
