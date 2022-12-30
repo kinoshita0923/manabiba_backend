@@ -1,3 +1,4 @@
 /frontend
 /docs/index.html
 src/router/tmp
+.env
