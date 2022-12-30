@@ -3,6 +3,8 @@ package main
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+
+  "src/handlers/user"
 )
 
 func main() {
@@ -17,7 +19,7 @@ func main() {
   e.Static("/docs/", "../docs/")
 
   // APIのルーティング
-  // e.POST("/user/register", user.Register)
+  e.POST("/user/register", user.Register)
   // e.POST("/user/authentication", user.Authentication)
   // e.GET("/user/check-login", user.CheckLogin)
   // e.POST("/group/register", group.Register)
