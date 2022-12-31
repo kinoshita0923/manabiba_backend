@@ -1,9 +1,9 @@
 package database
 
 import (
+	"fmt"
 	"database/sql"
 	"os"
-	"fmt"
 
 	"github.com/joho/godotenv"
 	_ "github.com/go-sql-driver/mysql"
