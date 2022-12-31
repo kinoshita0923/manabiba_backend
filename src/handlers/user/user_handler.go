@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 
 	"src/database"
+	"src/lib/hash"
 )
 
 func Register(c echo.Context) error {
@@ -14,6 +15,9 @@ func Register(c echo.Context) error {
 	name 	 := c.FormValue("user_name")
 	password := c.FormValue("user_password")
 	email 	 := c.FormValue("email")
+
+	// パスワードをハッシュ化
+	hashedPassword := hash.HashPassword(password)
 
 	// データベースのハンドルを取得
 	db := database.Connect()
@@ -27,7 +31,7 @@ func Register(c echo.Context) error {
 	defer insert.Close()
 
 	// SQLの実行
-	_, err = insert.Exec(name, password, email)
+	_, err = insert.Exec(name, hashedPassword, email)
 	if err != nil {
 		log.Fatal(err)
 	}
