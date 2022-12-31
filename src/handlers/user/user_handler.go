@@ -104,4 +104,51 @@ func Authentication(c echo.Context) error {
 	}
 }
 
-// func CheckLogin(c echo.Context) error {}
+func CheckLogin(c echo.Context) error {
+	// トークンを変数に格納
+	tokenCookie, _ := c.Cookie("token")
+
+	tokenText := tokenCookie.Value
+	userId := jwt.ParseToken(tokenText).(float64)
+
+	// データベースのハンドルを取得
+	db := database.Connect()
+	defer db.Close()
+
+	// DBにクエリを送信
+	rows, err := db.Query(
+		"SELECT EXISTS(SELECT * FROM users WHERE user_id = ?) AS exist_check;",
+		userId,
+	)
+	if err != nil {
+		log.Fatal(err)
+		return c.NoContent(http.StatusOK)
+	}
+	defer rows.Close()
+
+	// 結果を代入する変数を定義
+	var (
+		exist_check int
+	)
+
+	// 結果を代入
+	for rows.Next() {
+		err := rows.Scan(&exist_check)
+
+		if err != nil {
+			return c.NoContent(http.StatusOK)
+		}
+	}
+
+	// トークンを発行
+	if exist_check >= 1 {
+		tokenText := jwt.GetTokenText(int64(userId))
+		token := token.GetToken(tokenText)
+		c.SetCookie(token)
+		return c.NoContent(http.StatusOK)
+	} else {
+		cookie := token.DeleteToken()
+		c.SetCookie(cookie)
+		return c.NoContent(http.StatusOK)
+	}
+}
