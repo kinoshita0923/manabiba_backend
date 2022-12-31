@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	"database/sql"
 	"os"
 
@@ -17,10 +18,9 @@ func Connect() *sql.DB {
 	PORT 	 := os.Getenv("PORT")
 	DATABASE := os.Getenv("DATABASE")
 
-
 	// データベースのハンドルを取得する
-	dbconf := USER + ":" + PASSWORD + "@tcp(" + HOST + ":" + PORT + ")/" + DATABASE
-	db, err := sql.Open("mysql", dbconf)
+	dbconf := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", USER, PASSWORD, HOST, PORT, DATABASE)
+	db, _ := sql.Open("mysql", dbconf)
 
 	return db
 }

@@ -6,4 +6,4 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func Reverse(c echo.Context) error {}
+// func Reverse(c echo.Context) error {}
