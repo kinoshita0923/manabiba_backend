@@ -1,9 +1,13 @@
 package user
 
 import (
+<<<<<<< HEAD
 	"log"
 	"net/http"
+=======
+>>>>>>> f6cff87 (⚡️ 認証機能を実装)
 	"log"
+	"net/http"
 
 	"github.com/labstack/echo/v4"
 
@@ -60,6 +64,53 @@ func Authentication(c echo.Context) error {
 	// form-dataの値を変数に格納	
 	email	 := c.FormValue("email")
 	password := c.FormValue("password")
+<<<<<<< HEAD
+=======
+
+	// パスワードをハッシュ化
+	hashedPassword := hash.HashPassword(password)
+
+	// データベースのハンドルを取得
+	db := database.Connect()
+	defer db.Close()
+
+	// DBにクエリを送信
+	rows, err := db.Query(
+		"SELECT user_id, user_password FROM users WHERE email = ?;",
+		email,
+	)
+	if err != nil {
+		log.Fatal(err)
+		return c.NoContent(http.StatusOK)
+	}
+	defer rows.Close()
+
+	// 結果を代入する変数を定義
+	var (
+		user_id       int
+		user_password string
+	)
+
+	// 結果を代入
+	for rows.Next() {
+		err := rows.Scan(&user_id, &user_password)
+
+		if err != nil {
+			return c.NoContent(http.StatusOK)
+		}
+	}
+
+	// トークンを発行
+	if user_password == hashedPassword {
+		tokenText := jwt.GetTokenText(int64(user_id))
+		tokenCookie := token.GetToken(tokenText)
+		c.SetCookie(tokenCookie)
+		return c.NoContent(http.StatusOK)
+	} else {
+		return c.NoContent(http.StatusOK)
+	}
+}
+>>>>>>> f6cff87 (⚡️ 認証機能を実装)
 
 	// パスワードをハッシュ化
 	hashedPassword := hash.HashPassword(password)
