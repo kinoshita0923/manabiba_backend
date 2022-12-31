@@ -8,6 +8,8 @@ import (
 
 	"src/database"
 	"src/lib/hash"
+	"src/lib/jwt"
+	"src/lib/token"
 )
 
 func Register(c echo.Context) error {
@@ -27,14 +29,27 @@ func Register(c echo.Context) error {
 	insert, err := db.Prepare("INSERT INTO users(user_name, user_password, email) VALUES(?, ?, ?)")
 	if err != nil {
 		log.Fatal(err)
+		return c.NoContent(http.StatusOK)
 	}
 	defer insert.Close()
 
 	// SQLの実行
-	_, err = insert.Exec(name, hashedPassword, email)
+	res, err := insert.Exec(name, hashedPassword, email)
 	if err != nil {
 		log.Fatal(err)
+		return c.NoContent(http.StatusOK)
 	}
+
+	// ユーザIDを取得
+	userId, err := res.LastInsertId()
+	if err != nil {
+		log.Fatal(err)
+		return c.NoContent(http.StatusOK)
+	}
+
+	tokenText := jwt.GetTokenText(userId)
+	tokenCookie := token.GetToken(tokenText)
+	c.SetCookie(tokenCookie)
 
 	return c.NoContent(http.StatusOK)
 }
