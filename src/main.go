@@ -21,7 +21,7 @@ func main() {
   // APIのルーティング
   e.POST("/user/register", user.Register)
   // e.POST("/user/authentication", user.Authentication)
-  // e.GET("/user/check-login", user.CheckLogin)
+  e.GET("/user/check-login", user.CheckLogin)
   // e.POST("/group/register", group.Register)
   // e.POST("/group/participate", group.Participate)
   // e.GET("/group/select", group.Select)
