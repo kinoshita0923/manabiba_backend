@@ -47,6 +47,7 @@ func Register(c echo.Context) error {
 		return c.NoContent(http.StatusOK)
 	}
 
+	// トークンを発行
 	tokenText := jwt.GetTokenText(userId)
 	tokenCookie := token.GetToken(tokenText)
 	c.SetCookie(tokenCookie)
