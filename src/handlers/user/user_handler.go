@@ -1,8 +1,8 @@
 package user
 
 import (
-	"net/http"
 	"log"
+	"net/http"
 
 	"github.com/labstack/echo/v4"
 
@@ -26,7 +26,7 @@ func Register(c echo.Context) error {
 	defer db.Close()
 
 	// SQL文を定義
-	insert, err := db.Prepare("INSERT INTO users(user_name, user_password, email) VALUES(?, ?, ?)")
+	insert, err := db.Prepare("INSERT INTO users(user_name, user_password, email) VALUES(?, ?, ?);")
 	if err != nil {
 		log.Fatal(err)
 		return c.NoContent(http.StatusOK)
@@ -55,6 +55,53 @@ func Register(c echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
-// func Authentication(c echo.Context) error {}
+func Authentication(c echo.Context) error {
+	// form-dataの値を変数に格納	
+	email	 := c.FormValue("email")
+	password := c.FormValue("password")
+
+	// パスワードをハッシュ化
+	hashedPassword := hash.HashPassword(password)
+
+	// データベースのハンドルを取得
+	db := database.Connect()
+	defer db.Close()
+
+	// DBにクエリを送信
+	rows, err := db.Query(
+		"SELECT user_id, user_password FROM users WHERE email = ?;",
+		email,
+	)
+	if err != nil {
+		log.Fatal(err)
+		return c.NoContent(http.StatusOK)
+	}
+	defer rows.Close()
+
+	// 結果を代入する変数を定義
+	var (
+		user_id       int
+		user_password string
+	)
+
+	// 結果を代入
+	for rows.Next() {
+		err := rows.Scan(&user_id, &user_password)
+
+		if err != nil {
+			return c.NoContent(http.StatusOK)
+		}
+	}
+
+	// トークンを発行
+	if user_password == hashedPassword {
+		tokenText := jwt.GetTokenText(int64(user_id))
+		tokenCookie := token.GetToken(tokenText)
+		c.SetCookie(tokenCookie)
+		return c.NoContent(http.StatusOK)
+	} else {
+		return c.NoContent(http.StatusOK)
+	}
+}
 
 // func CheckLogin(c echo.Context) error {}

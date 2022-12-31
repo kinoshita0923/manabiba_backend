@@ -11,6 +11,7 @@ func GetToken(tokenText string) *http.Cookie {
 	cookie := new(http.Cookie)
 	cookie.Name = "token"
 	cookie.Value = tokenText
+	cookie.HttpOnly = true
 	cookie.Expires = time.Now().Add(time.Hour * 24 * 7)
 	return cookie
 }
