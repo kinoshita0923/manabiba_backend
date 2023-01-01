@@ -31,7 +31,8 @@ func ParseToken(tokenText string) interface{} {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 
-		return []byte("SECRET_KEY"), nil
+		SECRET_KEY := os.Getenv("SECRET_KEY")
+		return []byte(SECRET_KEY), nil
 	})
 
 	claims, _ := token.Claims.(jwt.MapClaims)
