@@ -29,7 +29,7 @@ func Register(c echo.Context) error {
 	insert, err := db.Prepare("INSERT INTO users(user_name, user_password, email) VALUES(?, ?, ?);")
 	if err != nil {
 		log.Fatal(err)
-		return c.NoContent(http.StatusOK)
+		return c.NoContent(500)
 	}
 	defer insert.Close()
 
@@ -37,14 +37,14 @@ func Register(c echo.Context) error {
 	res, err := insert.Exec(name, hashedPassword, email)
 	if err != nil {
 		log.Fatal(err)
-		return c.NoContent(http.StatusOK)
+		return c.NoContent(500)
 	}
 
 	// ユーザIDを取得
 	userId, err := res.LastInsertId()
 	if err != nil {
 		log.Fatal(err)
-		return c.NoContent(http.StatusOK)
+		return c.NoContent(500)
 	}
 
 	// トークンを発行
@@ -74,7 +74,7 @@ func Authentication(c echo.Context) error {
 	)
 	if err != nil {
 		log.Fatal(err)
-		return c.NoContent(http.StatusOK)
+		return c.NoContent(500)
 	}
 	defer rows.Close()
 
@@ -89,7 +89,7 @@ func Authentication(c echo.Context) error {
 		err := rows.Scan(&user_id, &user_password)
 
 		if err != nil {
-			return c.NoContent(http.StatusOK)
+			return c.NoContent(500)
 		}
 	}
 
@@ -100,7 +100,7 @@ func Authentication(c echo.Context) error {
 		c.SetCookie(tokenCookie)
 		return c.NoContent(http.StatusOK)
 	} else {
-		return c.NoContent(http.StatusOK)
+		return c.NoContent(403)
 	}
 }
 
@@ -122,7 +122,7 @@ func CheckLogin(c echo.Context) error {
 	)
 	if err != nil {
 		log.Fatal(err)
-		return c.NoContent(http.StatusOK)
+		return c.NoContent(500)
 	}
 	defer rows.Close()
 
@@ -136,7 +136,7 @@ func CheckLogin(c echo.Context) error {
 		err := rows.Scan(&exist_check)
 
 		if err != nil {
-			return c.NoContent(http.StatusOK)
+			return c.NoContent(500)
 		}
 	}
 
@@ -149,6 +149,6 @@ func CheckLogin(c echo.Context) error {
 	} else {
 		cookie := token.DeleteToken()
 		c.SetCookie(cookie)
-		return c.NoContent(http.StatusOK)
+		return c.NoContent(403)
 	}
 }

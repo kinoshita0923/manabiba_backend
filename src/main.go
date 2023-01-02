@@ -14,6 +14,10 @@ func main() {
   // ミドルウェアを設定
   e.Use(middleware.Logger())
   e.Use(middleware.Recover())
+  e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+    AllowOrigins: []string{"http://13.231.249.243"},
+    AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+  }))
 
   // 静的サイトを返すルーティングの設定
   e.Static("/docs/", "../docs/")
