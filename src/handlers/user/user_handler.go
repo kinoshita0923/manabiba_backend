@@ -106,7 +106,10 @@ func Authentication(c echo.Context) error {
 
 func CheckLogin(c echo.Context) error {
 	// トークンを変数に格納
-	tokenCookie, _ := c.Cookie("token")
+	tokenCookie, err := c.Cookie("token")
+	if err != nil {
+		return c.String(http.StatusOK, "No token")
+	}
 
 	tokenText := tokenCookie.Value
 	userId := jwt.ParseToken(tokenText).(float64)
