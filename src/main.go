@@ -1,7 +1,7 @@
 package main
 
 import (
-  // "src/handlers/user"
+  "src/handlers/user"
 
   "github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
