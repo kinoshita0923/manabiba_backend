@@ -28,9 +28,9 @@ func main() {
   e.Static("/search-group", "../frontend/dist")
 
   // APIのルーティング
-  // e.POST("/user/register", user.Register)
-  // e.POST("/user/authentication/", user.Authentication)
-  // e.GET("/user/check-login", user.CheckLogin)
+  e.POST("/user/register", user.Register)
+  e.POST("/user/authentication/", user.Authentication)
+  e.GET("/user/check-login", user.CheckLogin)
   // e.POST("/group/register", group.Register)
   // e.POST("/group/participate", group.Participate)
   // e.GET("/group/select", group.Select)
