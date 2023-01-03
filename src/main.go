@@ -29,7 +29,7 @@ func main() {
 
   // APIのルーティング
   e.POST("/user/register", user.Register)
-  e.POST("/user/authentication/", user.Authentication)
+  e.POST("/user/authentication", user.Authentication)
   e.GET("/user/check-login", user.CheckLogin)
   // e.POST("/group/register", group.Register)
   // e.POST("/group/participate", group.Participate)
@@ -48,5 +48,5 @@ func main() {
   // e.PUT("/good", good.Reverse)
 
   // サーバーをポート番号8080で起動
-  e.Logger.Fatal(e.Start(":8080"))
+  e.Logger.Fatal(e.Start(":8081"))
 }
