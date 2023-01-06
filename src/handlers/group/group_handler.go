@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 
 	"src/database"
+	"src/lib/jwt"
 )
 
  func Register(c echo.Context) error {
@@ -26,7 +27,32 @@ import (
 	defer insert.Close()
 
 	// SQLの実行
-	_, err = insert.Exec(name)
+	res, err := insert.Exec(name)
+	if err != nil{
+		log.Fatal(err)
+		return c.NoContent(http.StatusOK)
+	}
+
+	// グループIDを取得
+	groupId, err := res.LastInsertId()
+	if err != nil {
+		log.Fatal(err)
+		return c.NoContent(http.StatusOK)
+	}
+
+	//グループを作ったユーザを管理者にする
+	tokenCookie, _ := c.Cookie("token")
+	tokenText := tokenCookie.Value
+	userId := jwt.ParseToken(tokenText).(float64)
+
+	update, err := db.Prepare("UPDATE users SET group_id = ?, is_manager = true WHERE user_id = ?;")
+	if err != nil{
+		log.Fatal(err)
+		return c.NoContent(http.StatusOK)
+	}
+
+	// SQLの実行
+	_, err = update.Exec(groupId, userId)
 	if err != nil{
 		log.Fatal(err)
 		return c.NoContent(http.StatusOK)
