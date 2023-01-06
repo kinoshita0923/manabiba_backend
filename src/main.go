@@ -2,6 +2,7 @@ package main
 
 import (
   "src/handlers/user"
+  "src/handlers/group"
 
   "github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -31,7 +32,7 @@ func main() {
   e.POST("/user/register", user.Register)
   e.POST("/user/authentication", user.Authentication)
   e.GET("/user/check-login", user.CheckLogin)
-  // e.POST("/group/register", group.Register)
+  e.POST("/group/register", group.Register)
   // e.POST("/group/participate", group.Participate)
   // e.GET("/group/select", group.Select)
   // e.PATCH("/group/quit", group.Quit)
