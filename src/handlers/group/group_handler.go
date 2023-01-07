@@ -30,14 +30,14 @@ import (
 	res, err := insert.Exec(name)
 	if err != nil{
 		log.Fatal(err)
-		return c.NoContent(http.StatusOK)
+		return c.NoContent(http.StatusInternalServerError)
 	}
 
 	// グループIDを取得
 	groupId, err := res.LastInsertId()
 	if err != nil {
 		log.Fatal(err)
-		return c.NoContent(http.StatusOK)
+		return c.NoContent(http.StatusInternalServerError)
 	}
 
 	//グループを作ったユーザを管理者にする
@@ -48,17 +48,17 @@ import (
 	update, err := db.Prepare("UPDATE users SET group_id = ?, is_manager = true WHERE user_id = ?;")
 	if err != nil{
 		log.Fatal(err)
-		return c.NoContent(http.StatusOK)
+		return c.NoContent(http.StatusInternalServerError)
 	}
 
 	// SQLの実行
 	_, err = update.Exec(groupId, userId)
 	if err != nil{
 		log.Fatal(err)
-		return c.NoContent(http.StatusOK)
+		return c.NoContent(http.StatusInternalServerError)
 	}
 
-	return c.NoContent(http.StatusOK)
+	return c.NoContent(http.StatusCreated)
  }
 
 // func Participate(c echo.Context) error {}

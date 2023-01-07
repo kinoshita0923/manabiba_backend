@@ -29,7 +29,7 @@ func Register(c echo.Context) error {
 	insert, err := db.Prepare("INSERT INTO users(user_name, user_password, email) VALUES(?, ?, ?);")
 	if err != nil {
 		log.Fatal(err)
-		return c.NoContent(500)
+		return c.NoContent(http.StatusInternalServerError)
 	}
 	defer insert.Close()
 
@@ -37,14 +37,14 @@ func Register(c echo.Context) error {
 	res, err := insert.Exec(name, hashedPassword, email)
 	if err != nil {
 		log.Fatal(err)
-		return c.NoContent(500)
+		return c.NoContent(http.StatusInternalServerError)
 	}
 
 	// ユーザIDを取得
 	userId, err := res.LastInsertId()
 	if err != nil {
 		log.Fatal(err)
-		return c.NoContent(500)
+		return c.NoContent(http.StatusInternalServerError)
 	}
 
 	// トークンを発行
@@ -52,7 +52,7 @@ func Register(c echo.Context) error {
 	tokenCookie := token.GetToken(tokenText)
 	c.SetCookie(tokenCookie)
 
-	return c.NoContent(http.StatusOK)
+	return c.NoContent(http.StatusCreated)
 }
 
 func Authentication(c echo.Context) error {
@@ -74,7 +74,7 @@ func Authentication(c echo.Context) error {
 	)
 	if err != nil {
 		log.Fatal(err)
-		return c.NoContent(500)
+		return c.NoContent(http.StatusInternalServerError)
 	}
 	defer rows.Close()
 
@@ -89,7 +89,7 @@ func Authentication(c echo.Context) error {
 		err := rows.Scan(&user_id, &user_password)
 
 		if err != nil {
-			return c.NoContent(500)
+			return c.NoContent(http.StatusInternalServerError)
 		}
 	}
 
@@ -125,7 +125,7 @@ func CheckLogin(c echo.Context) error {
 	)
 	if err != nil {
 		log.Fatal(err)
-		return c.NoContent(500)
+		return c.NoContent(http.StatusInternalServerError)
 	}
 	defer rows.Close()
 
@@ -139,7 +139,7 @@ func CheckLogin(c echo.Context) error {
 		err := rows.Scan(&exist_check)
 
 		if err != nil {
-			return c.NoContent(500)
+			return c.NoContent(http.StatusInternalServerError)
 		}
 	}
 
