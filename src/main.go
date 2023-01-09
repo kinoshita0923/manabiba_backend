@@ -33,7 +33,7 @@ func main() {
   e.POST("/user/authentication", user.Authentication)
   e.GET("/user/check-login", user.CheckLogin)
   e.POST("/group/register", group.Register)
-  // e.POST("/group/participate", group.Participate)
+  e.POST("/group/participate", group.Participate)
   // e.GET("/group/select", group.Select)
   // e.PATCH("/group/quit", group.Quit)
   // e.PATCH("/group/host-update", group.HostUpdate)
