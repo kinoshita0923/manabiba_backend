@@ -129,7 +129,7 @@ func CheckLogin(c echo.Context) error {
 	}
 	defer rows.Close()
 
-	// 結果を代入する変数を定義
+	// 結果を代入する変数を宣言
 	var (
 		exist_check int
 	)
