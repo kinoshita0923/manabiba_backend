@@ -1,0 +1,43 @@
+version: '3'
+services:
+  db:
+    image: mariadb:10.5
+    volumes:
+      - ./db_data:/var/lib/mysql
+    ports:
+      - "${DB_PORT}"
+    restart: always
+    container_name: dockerMariaDB
+    environment:
+      - MYSQL_ROOT_PASSWORD=${ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DATABASE}
+      - MYSQL_USER=${USER}
+      - MYSQL_PASSWORD=${PASSWORD}
+    networks:
+      - manabiba-network
+    env_file:
+      - .env
+
+  web:
+    build: .
+    ports:
+      - "${WEB_PORT}"
+    working_dir: /var/www/manabiba/src
+    tty: true
+    depends_on:
+      - db
+    environment:
+      MYSQL_DATABASE: ${DATABASE}
+      MYSQL_HOST: dockerMariaDB
+      MYSQL_USER: ${USER}
+      MYSQL_PASSWORD: ${PASSWORD}
+    networks:
+      - manabiba-network
+    env_file:
+      - .env
+
+networks:
+  manabiba-network:
+    driver: bridge
+    ipam:
+      driver: default
