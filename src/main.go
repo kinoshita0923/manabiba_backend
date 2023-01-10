@@ -34,7 +34,7 @@ func main() {
   e.GET("/user/check-login", user.CheckLogin)
   e.POST("/group/register", group.Register)
   e.POST("/group/participate", group.Participate)
-  // e.GET("/group/select", group.Select)
+  e.GET("/group/select", group.Select)
   // e.PATCH("/group/quit", group.Quit)
   e.PATCH("/group/host-update", group.HostUpdate)
   // e.POST("/subject/register", subject.Register)
