@@ -151,6 +151,6 @@ func CheckLogin(c echo.Context) error {
 	} else {
 		cookie := token.DeleteCookie()
 		c.SetCookie(cookie)
-		return c.NoContent(403)
+		return c.NoContent(http.StatusForbidden)
 	}
 }
