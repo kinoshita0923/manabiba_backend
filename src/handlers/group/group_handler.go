@@ -1,6 +1,7 @@
 package group
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -9,6 +10,15 @@ import (
 	"src/database"
 	"src/lib/jwt"
 )
+
+type Group struct {
+	GroupId 	int
+	GroupName 	string
+}
+
+type Groups struct {
+	Groups []Group
+}
 
  func Register(c echo.Context) error {
 	// 値を変数に格納
@@ -95,7 +105,50 @@ func Participate(c echo.Context) error {
 	return c.NoContent(http.StatusOK)
 }
 
-// func Select(c echo.Context) error {}
+func Select(c echo.Context) error {
+	groupName := c.QueryParam("group_name")
+	fmt.Println(groupName)
+
+	// データベースのハンドルを取得
+	db := database.Connect()
+	defer db.Close()
+
+	rows, err := db.Query(
+		"SELECT group_id, group_name FROM groups WHERE group_name LIKE ?;",
+		"%" + groupName + "%",
+	)
+	if err != nil {
+		log.Fatal(err)
+		return c.NoContent(http.StatusInternalServerError)
+	}
+	defer rows.Close()
+
+	fmt.Println("test1 success")
+
+	groups := &Groups{}
+	for rows.Next() {
+		fmt.Println("test2 success")
+		group := &Group{}
+		err := rows.Scan(&group.GroupId, &group.GroupName)
+		fmt.Println(*group)
+
+		if len(groups.Groups) == 0 {
+			groups.Groups = []Group{*group}
+		} else {
+			groups.Groups = append(groups.Groups, *group)
+		}
+
+		fmt.Println(*groups)
+
+		if err != nil {
+			return c.NoContent(http.StatusInternalServerError)
+		}
+	}
+
+	fmt.Println(*groups)
+
+	return c.JSON(http.StatusOK, groups)
+}
 
 // func Quit(c echo.Context) error {}
 
