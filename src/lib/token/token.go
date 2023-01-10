@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func GetToken(tokenText string) *http.Cookie {
+func GenerateCookie(tokenText string) *http.Cookie {
 	cookie := new(http.Cookie)
 	cookie.Name = "token"
 	cookie.Value = tokenText
@@ -15,7 +15,7 @@ func GetToken(tokenText string) *http.Cookie {
 	return cookie
 }
 
-func DeleteToken() *http.Cookie {
+func DeleteCookie() *http.Cookie {
 	cookie := new(http.Cookie)
 	cookie.Name = "token"
 	cookie.Value = ""

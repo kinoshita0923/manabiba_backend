@@ -12,7 +12,7 @@ import (
 
  func Register(c echo.Context) error {
 	// 値を変数に格納
-	name := c.FormValue("group_name")
+	groupName := c.FormValue("group_name")
 
 	// データベースのハンドルを取得
 	db := database.Connect()
@@ -27,7 +27,7 @@ import (
 	defer insert.Close()
 
 	// SQLの実行
-	res, err := insert.Exec(name)
+	res, err := insert.Exec(groupName)
 	if err != nil{
 		log.Fatal(err)
 		return c.NoContent(http.StatusInternalServerError)
@@ -41,7 +41,10 @@ import (
 	}
 
 	//グループを作ったユーザを管理者にする
-	tokenCookie, _ := c.Cookie("token")
+	tokenCookie, err := c.Cookie("token")
+	if err != nil {
+		return c.String(http.StatusUnauthorized, "No token")
+	}
 	tokenText := tokenCookie.Value
 	userId := jwt.ParseToken(tokenText).(float64)
 
@@ -64,7 +67,10 @@ import (
 func Participate(c echo.Context) error {
 	groupId := c.FormValue("group_id")
 	
-	tokenCookie, _ := c.Cookie("token")
+	tokenCookie, err := c.Cookie("token")
+	if err != nil {
+		return c.String(http.StatusUnauthorized, "No token")
+	}
 	tokenText := tokenCookie.Value
 	userId := jwt.ParseToken(tokenText).(float64)
 
@@ -93,4 +99,60 @@ func Participate(c echo.Context) error {
 
 // func Quit(c echo.Context) error {}
 
-// func HostUpdate(c echo.Context) error {}
+func HostUpdate(c echo.Context) error {
+	// 引継ぎ先のユーザのメールアドレスを取得
+	email := c.FormValue("email")
+
+	// トークンからユーザIDを取得
+	tokenCookie, err := c.Cookie("token")
+	if err != nil {
+		return c.String(http.StatusUnauthorized, "No token")
+	}
+	tokenText := tokenCookie.Value
+	userId := jwt.ParseToken(tokenText).(float64)
+
+	db := database.Connect()
+	defer db.Close()
+	tx, err := db.Begin()
+	if err != nil {
+		return c.NoContent(http.StatusInternalServerError)
+	}
+
+	// 結果を代入する変数を宣言
+	var (
+		isCorrect int
+	)
+
+	// クエリを送信
+	rows, _ := tx.Query(
+		"SELECT COUNT(group_id) FROM users WHERE user_id = ? OR email = ? GROUP BY group_id;",
+		userId,
+		email,
+	)
+	defer rows.Close()
+	
+	for rows.Next() {
+		rows.Scan(&isCorrect)
+	}
+
+	// 2人のグループIDが同じでない場合認証エラーを返す
+	if isCorrect != 2 {
+		return c.NoContent(http.StatusForbidden)
+	}
+
+	// 現在の管理者から管理者権限をなくす
+	update, _ := tx.Prepare("UPDATE users SET is_manager = FALSE WHERE user_id = ?;")
+	update.Exec(userId)
+
+	// 新しい管理者に管理者権限を与える
+	update, _ = tx.Prepare("UPDATE users SET is_manager = TRUE WHERE email = ?;")
+	update.Exec(email)
+
+	if err != nil {
+		tx.Rollback()
+		return c.NoContent(http.StatusInternalServerError)
+	} else {
+		tx.Commit()
+		return c.NoContent(http.StatusOK)
+	}
+}
