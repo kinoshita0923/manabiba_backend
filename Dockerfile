@@ -1,4 +1,4 @@
-FROM golang:latest
+FROM golang:1.18
 
 WORKDIR /var/www/manabiba/src
 
