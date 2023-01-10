@@ -1,3 +1,6 @@
-/frontend
-/docs/index.html
 .env
+/db_data
+/src/tmp
+
+/src/frontend
+/docs/index.html

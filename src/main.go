@@ -23,17 +23,17 @@ func main() {
   // 静的サイトを返すルーティングの設定
   e.Static("/docs/", "../docs/")
 
-  e.Static("/", "../frontend/dist")
-  e.Static("/login", "../frontend/dist")
-  e.Static("/signup", "../frontend/dist")
-  e.Static("/search-group", "../frontend/dist")
+  e.Static("/", "./frontend/dist")
+  e.Static("/login", "./frontend/dist")
+  e.Static("/signup", "./frontend/dist")
+  e.Static("/search-group", "./frontend/dist")
 
   // APIのルーティング
   e.POST("/user/register", user.Register)
   e.POST("/user/authentication", user.Authentication)
   e.GET("/user/check-login", user.CheckLogin)
   e.POST("/group/register", group.Register)
-  // e.POST("/group/participate", group.Participate)
+  e.POST("/group/participate", group.Participate)
   // e.GET("/group/select", group.Select)
   // e.PATCH("/group/quit", group.Quit)
   // e.PATCH("/group/host-update", group.HostUpdate)

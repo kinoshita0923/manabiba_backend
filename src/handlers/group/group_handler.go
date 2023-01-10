@@ -22,7 +22,7 @@ import (
 	insert, err := db.Prepare("INSERT INTO groups(group_name) VALUES(?);")
 	if err != nil{
 		log.Fatal(err)
-		return c.NoContent(http.StatusOK)
+		return c.NoContent(http.StatusInternalServerError)
 	}
 	defer insert.Close()
 
@@ -64,7 +64,33 @@ import (
 	return c.NoContent(http.StatusCreated)
  }
 
-// func Participate(c echo.Context) error {}
+func Participate(c echo.Context) error {
+	groupId := c.FormValue("group_id")
+	
+	tokenCookie, _ := c.Cookie("token")
+	tokenText := tokenCookie.Value
+	userId := jwt.ParseToken(tokenText).(float64)
+
+	// データベースのハンドルを取得
+	db := database.Connect()
+	defer db.Close()
+
+	// ユーザをグループに入会させる処理
+	update, err := db.Prepare("UPDATE users SET group_id = ? WHERE user_id = ?;")
+	if err != nil{
+		log.Fatal(err)
+		return c.NoContent(http.StatusInternalServerError)
+	}
+	defer update.Close()
+
+	_, err = update.Exec(groupId, userId)
+	if err != nil{
+		log.Fatal(err)
+		return c.NoContent(http.StatusInternalServerError)
+	}
+
+	return c.NoContent(http.StatusOK)
+}
 
 // func Select(c echo.Context) error {}
 
