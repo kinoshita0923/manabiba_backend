@@ -48,8 +48,8 @@ func Register(c echo.Context) error {
 	}
 
 	// トークンを発行
-	tokenText := jwt.GetTokenText(userId)
-	tokenCookie := token.GetToken(tokenText)
+	tokenText := jwt.GenerateToken(userId)
+	tokenCookie := token.GenerateCookie(tokenText)
 	c.SetCookie(tokenCookie)
 
 	return c.NoContent(http.StatusCreated)
@@ -95,8 +95,8 @@ func Authentication(c echo.Context) error {
 
 	// トークンを発行
 	if user_password == hashedPassword {
-		tokenText := jwt.GetTokenText(int64(user_id))
-		tokenCookie := token.GetToken(tokenText)
+		tokenText := jwt.GenerateToken(int64(user_id))
+		tokenCookie := token.GenerateCookie(tokenText)
 		c.SetCookie(tokenCookie)
 		return c.NoContent(http.StatusOK)
 	} else {
@@ -110,7 +110,6 @@ func CheckLogin(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusOK, "No token")
 	}
-
 	tokenText := tokenCookie.Value
 	userId := jwt.ParseToken(tokenText).(float64)
 
@@ -145,12 +144,12 @@ func CheckLogin(c echo.Context) error {
 
 	// トークンを発行
 	if exist_check >= 1 {
-		tokenText := jwt.GetTokenText(int64(userId))
-		token := token.GetToken(tokenText)
+		tokenText := jwt.GenerateToken(int64(userId))
+		token := token.GenerateCookie(tokenText)
 		c.SetCookie(token)
 		return c.NoContent(http.StatusOK)
 	} else {
-		cookie := token.DeleteToken()
+		cookie := token.DeleteCookie()
 		c.SetCookie(cookie)
 		return c.NoContent(403)
 	}

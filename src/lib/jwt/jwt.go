@@ -9,7 +9,7 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
-func GetTokenText(userId int64) string {
+func GenerateToken(userId int64) string {
 	claims := jwt.MapClaims{
 		"user_id": userId,
 		"exp":     time.Now().Add(time.Hour * 24 * 8).Unix(),
