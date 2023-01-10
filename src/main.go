@@ -36,7 +36,7 @@ func main() {
   e.POST("/group/participate", group.Participate)
   // e.GET("/group/select", group.Select)
   // e.PATCH("/group/quit", group.Quit)
-  // e.PATCH("/group/host-update", group.HostUpdate)
+  e.PATCH("/group/host-update", group.HostUpdate)
   // e.POST("/subject/register", subject.Register)
   // e.GET("/subject/select", subject.Select)
   // e.POST("/point/add-difference", point.AddDifference)
