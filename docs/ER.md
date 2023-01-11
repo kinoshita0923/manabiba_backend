@@ -3,6 +3,7 @@ erDiagram
     groups {
         int group_id
         varchar group_name
+        int max_grade
     }
 
     users {
@@ -22,43 +23,66 @@ erDiagram
 
     points {
         int user_id
-        int content_id
         int difference
         datetime created_date
+    }
+
+    viewable_contents {
+        int user_id
+        int subject_id
+        tinyint confirm_genre
     }
 
     subjects {
         int subject_id
         varchar subject_name
         int group_id
-        int class_id
     }
 
-    contents {
-        int content_id
-        int subject_id
+    evaluations {
+        int evaluation_id
         int user_id
+        int suject_id
         int valuation
         varchar comment
-        tinyint nth_quater
-        varchar examination_path
-        varchar answer_path
         varchar teacher_name
         tinyint term
-        double study_time
+        float study_time
+    }
+
+    examinations {
+        int examination_id
+        int user_id
+        int subject_id
+        tinyint nth_quarter
+        float study_time
+    }
+
+    image_paths {
+        int examination_id
+        int file_id
+        varchar path
+        boolean is_answer
+    }
+
+    lesson_relations {
+        int subject_id
+        int class_id
     }
 
     goods {
         int good_id
-        int content_id
+        int evaluation_id
         int user_id
     }
 
     groups||--|{users: ""
     users||--o{points: ""
     users}o--o{subjects: ""
-    users||--o{contents: ""
+    users||--o{evaluations: ""
+    users||--o{examinations: ""
     users||--o|goods: ""
-    contents||--o{goods: ""
-    subjects||--|{classes: ""
+    subjects||--o{evaluations: ""
+    evaluations||--o{goods: ""
+    examinations||--|{image_paths: ""
 ```

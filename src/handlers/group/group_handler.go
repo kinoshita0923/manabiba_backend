@@ -140,7 +140,34 @@ func Select(c echo.Context) error {
 	return c.JSON(http.StatusOK, groups)
 }
 
-// func Quit(c echo.Context) error {}
+func Quit(c echo.Context) error {
+	tokenCookie, err := c.Cookie("token")
+	if err != nil {
+		return c.String(http.StatusUnauthorized, "No token")
+	}
+	tokenText := tokenCookie.Value
+	userId := jwt.ParseToken(tokenText).(float64)
+
+	// データベースのハンドルを取得
+	db := database.Connect()
+	defer db.Close()
+
+	// ユーザをグループから退会させる処理
+	update, err := db.Prepare("UPDATE users SET group_id = NULL WHERE user_id = ?;")
+	if err != nil{
+		log.Fatal(err)
+		return c.NoContent(http.StatusInternalServerError)
+	}
+	defer update.Close()
+
+	_, err = update.Exec(userId)
+	if err != nil{
+		log.Fatal(err)
+		return c.NoContent(http.StatusInternalServerError)
+	}
+
+	return c.NoContent(http.StatusOK)
+}
 
 func HostUpdate(c echo.Context) error {
 	// 引継ぎ先のユーザのメールアドレスを取得
