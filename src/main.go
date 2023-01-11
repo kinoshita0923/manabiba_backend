@@ -42,11 +42,10 @@ func main() {
   e.PATCH("/group/host-update", group.HostUpdate)
   // e.POST("/subject/register", subject.Register)
   e.GET("/subject/load-subject", subject.LoadSubject)
-  // e.POST("/point/add-difference", point.AddDifference)
   e.POST("/evaluation/register", evaluation.Register)
-  // e.PATCH("/evaluation/update", evaluation.Update)
+  e.POST("/evaluation/purchase", evaluation.Purchase)
   e.POST("/examination/upload", examination.Upload)
-  // e.PATCH("/examination/update", examination.Update)
+  e.POST("/examination/purchase", examination.Purchase)
   // e.PUT("/good", good.Reverse)
 
   // サーバーをポート番号8080で起動
