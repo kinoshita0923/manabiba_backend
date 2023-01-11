@@ -22,9 +22,14 @@ erDiagram
 
     points {
         int user_id
-        int content_id
         int difference
         datetime created_date
+    }
+
+    viewable_contents {
+        int user_id
+        int subject_id
+        tinyint confirm_genre
     }
 
     subjects {
