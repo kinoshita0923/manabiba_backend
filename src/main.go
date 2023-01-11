@@ -1,9 +1,10 @@
 package main
 
 import (
-  "src/handlers/user"
-  "src/handlers/group"
   "src/handlers/evaluation"
+  "src/handlers/group"
+  "src/handlers/subject"
+  "src/handlers/user"
 
   "github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -39,7 +40,7 @@ func main() {
   e.PATCH("/group/quit", group.Quit)
   e.PATCH("/group/host-update", group.HostUpdate)
   // e.POST("/subject/register", subject.Register)
-  // e.GET("/subject/select", subject.Select)
+  e.GET("/subject/load-subject", subject.LoadSubject)
   // e.POST("/point/add-difference", point.AddDifference)
   e.POST("/evaluation/register", evaluation.Register)
   // e.PATCH("/evaluation/update", evaluation.Update)
