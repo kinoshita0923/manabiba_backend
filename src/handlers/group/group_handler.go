@@ -1,7 +1,6 @@
 package group
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -107,7 +106,6 @@ func Participate(c echo.Context) error {
 
 func Select(c echo.Context) error {
 	groupName := c.QueryParam("group_name")
-	fmt.Println(groupName)
 
 	// データベースのハンドルを取得
 	db := database.Connect()
@@ -123,14 +121,10 @@ func Select(c echo.Context) error {
 	}
 	defer rows.Close()
 
-	fmt.Println("test1 success")
-
 	groups := &Groups{}
 	for rows.Next() {
-		fmt.Println("test2 success")
 		group := &Group{}
 		err := rows.Scan(&group.GroupId, &group.GroupName)
-		fmt.Println(*group)
 
 		if len(groups.Groups) == 0 {
 			groups.Groups = []Group{*group}
@@ -138,14 +132,10 @@ func Select(c echo.Context) error {
 			groups.Groups = append(groups.Groups, *group)
 		}
 
-		fmt.Println(*groups)
-
 		if err != nil {
 			return c.NoContent(http.StatusInternalServerError)
 		}
 	}
-
-	fmt.Println(*groups)
 
 	return c.JSON(http.StatusOK, groups)
 }
