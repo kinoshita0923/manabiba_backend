@@ -84,4 +84,5 @@ erDiagram
     users||--o|goods: ""
     subjects||--o{evaluations: ""
     evaluations||--o{goods: ""
+    examinations||--|{image_paths: ""
 ```
