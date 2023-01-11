@@ -48,4 +48,32 @@ func Register(c echo.Context) error {
 	return c.NoContent(http.StatusCreated)
 }
 
-// func Update(c echo.Context) error {}
+func Purchase(c echo.Context) error {
+	subjectId := c.FormValue("subject_id")
+
+	tokenCookie, err := c.Cookie("token")
+	if err != nil {
+		return c.String(http.StatusOK, "No token")
+	}
+	tokenText := tokenCookie.Value
+	userId := jwt.ParseToken(tokenText).(float64)
+
+	// データベースのハンドルを取得
+	db := database.Connect()
+	defer db.Close()
+
+	insert, err := db.Prepare("INSERT INTO viewable_contents(user_id, subject_id, confirm_genre) VALUES(?, ?, FALSE);")
+	if err != nil {
+		log.Fatal(err)
+		return c.NoContent(http.StatusInternalServerError)
+	}
+	defer insert.Close()
+
+	_, err = insert.Exec(userId, subjectId)
+	if err != nil {
+		log.Fatal(err)
+		return c.NoContent(http.StatusInternalServerError)
+	}
+
+	return c.NoContent(http.StatusCreated)
+}
