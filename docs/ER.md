@@ -3,6 +3,7 @@ erDiagram
     groups {
         int group_id
         varchar group_name
+        int max_grade
     }
 
     users {
