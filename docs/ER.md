@@ -54,10 +54,15 @@ erDiagram
         int examination_id
         int user_id
         int subject_id
-        varchar examination_path
-        varchar answer_path
         tinyint nth_quarter
         float study_time
+    }
+
+    image_paths {
+        int examination_id
+        int file_id
+        varchar path
+        boolean is_answer
     }
 
     lesson_relations {
