@@ -3,7 +3,7 @@ package main
 import (
   "src/handlers/user"
   "src/handlers/group"
-  "src/handlers/content/comment"
+  "src/handlers/evaluation"
 
   "github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -41,12 +41,10 @@ func main() {
   // e.POST("/subject/register", subject.Register)
   // e.GET("/subject/select", subject.Select)
   // e.POST("/point/add-difference", point.AddDifference)
-  e.POST("/content/comment/register", comment.Register)
-  // e.PATCH("/content/comment/update", comment.Update)
-  // e.POST("/content/examination/register", examination.Register)
-  // e.PATCH("/content/examination/update", examination.Update)
-  // e.GET("/content/select", content.Select)
-  // e.DELETE("/content/delete", content.Delete)
+  e.POST("/evaluation/register", evaluation.Register)
+  // e.PATCH("/evaluation/update", evaluation.Update)
+  // e.POST("/examination/register", examination.Register)
+  // e.PATCH("/examination/update", examination.Update)
   // e.PUT("/good", good.Reverse)
 
   // サーバーをポート番号8080で起動
