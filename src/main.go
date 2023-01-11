@@ -2,6 +2,7 @@ package main
 
 import (
   "src/handlers/evaluation"
+  "src/handlers/examination"
   "src/handlers/group"
   "src/handlers/subject"
   "src/handlers/user"
@@ -44,7 +45,7 @@ func main() {
   // e.POST("/point/add-difference", point.AddDifference)
   e.POST("/evaluation/register", evaluation.Register)
   // e.PATCH("/evaluation/update", evaluation.Update)
-  // e.POST("/examination/register", examination.Register)
+  e.POST("/examination/upload", examination.Upload)
   // e.PATCH("/examination/update", examination.Update)
   // e.PUT("/good", good.Reverse)
 
