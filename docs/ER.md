@@ -31,34 +31,46 @@ erDiagram
         int subject_id
         varchar subject_name
         int group_id
-        int class_id
     }
 
-    contents {
-        int content_id
-        int subject_id
+    evaluations {
+        int evaluation_id
         int user_id
+        int suject_id
         int valuation
         varchar comment
-        tinyint nth_quater
-        varchar examination_path
-        varchar answer_path
         varchar teacher_name
         tinyint term
-        double study_time
+        float study_time
+    }
+
+    examinations {
+        int examination_id
+        int user_id
+        int subject_id
+        varchar examination_path
+        varchar answer_path
+        tinyint nth_quarter
+        float study_time
+    }
+
+    lesson_relations {
+        int subject_id
+        int class_id
     }
 
     goods {
         int good_id
-        int content_id
+        int evaluation_id
         int user_id
     }
 
     groups||--|{users: ""
     users||--o{points: ""
     users}o--o{subjects: ""
-    users||--o{contents: ""
+    users||--o{evaluations: ""
+    users||--o{examinations: ""
     users||--o|goods: ""
-    contents||--o{goods: ""
-    subjects||--|{classes: ""
+    subjects||--o{evaluations: ""
+    evaluations||--o{goods: ""
 ```
