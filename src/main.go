@@ -48,6 +48,7 @@ func main() {
   e.POST("/evaluation/purchase", evaluation.Purchase)
   e.POST("/examination/upload", examination.Upload)
   e.POST("/examination/purchase", examination.Purchase)
+  e.GET("/class/fetch", class.Fetch)
   e.POST("/class/register", class.Register)
   // e.PUT("/good", good.Reverse)
 
