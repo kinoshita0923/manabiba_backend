@@ -55,15 +55,14 @@ func Fetch(c echo.Context) error {
 	for rows.Next() {
 		evaluation := &Evaluation{}
 		err := rows.Scan(&evaluation.EvaluationId, &evaluation.Evaluation, &evaluation.Comment, &evaluation.TeacherName, &evaluation.Term, &evaluation.StudyTime)
+		if err != nil {
+			return c.NoContent(http.StatusInternalServerError)
+		}
 
 		if len(evaluations.Evaluations) == 0 {
 			evaluations.Evaluations = []Evaluation{*evaluation}
 		} else {
 			evaluations.Evaluations = append(evaluations.Evaluations, *evaluation)
-		}
-
-		if err != nil {
-			return c.NoContent(http.StatusInternalServerError)
 		}
 	}
 
