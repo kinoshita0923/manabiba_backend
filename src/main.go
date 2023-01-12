@@ -1,13 +1,14 @@
 package main
 
 import (
-  "src/handlers/evaluation"
-  "src/handlers/examination"
-  "src/handlers/group"
-  "src/handlers/subject"
-  "src/handlers/user"
+	"src/handlers/class"
+	"src/handlers/evaluation"
+	"src/handlers/examination"
+	"src/handlers/group"
+	"src/handlers/subject"
+	"src/handlers/user"
 
-  "github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
@@ -47,6 +48,7 @@ func main() {
   e.POST("/evaluation/purchase", evaluation.Purchase)
   e.POST("/examination/upload", examination.Upload)
   e.POST("/examination/purchase", examination.Purchase)
+  e.POST("/class/register", class.Register)
   // e.PUT("/good", good.Reverse)
 
   // サーバーをポート番号8080で起動
