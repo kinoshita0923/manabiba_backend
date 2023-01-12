@@ -22,13 +22,14 @@ type Groups struct {
  func Register(c echo.Context) error {
 	// 値を変数に格納
 	groupName := c.FormValue("group_name")
+	maxGrade  := c.FormValue("max_grade")
 
 	// データベースのハンドルを取得
 	db := database.Connect()
 	defer db.Close()
 
 	// SQL文を定義
-	insert, err := db.Prepare("INSERT INTO groups(group_name) VALUES(?);")
+	insert, err := db.Prepare("INSERT INTO groups(group_name, max_grade) VALUES(?, ?);")
 	if err != nil{
 		log.Fatal(err)
 		return c.NoContent(http.StatusInternalServerError)
@@ -36,7 +37,7 @@ type Groups struct {
 	defer insert.Close()
 
 	// SQLの実行
-	res, err := insert.Exec(groupName)
+	res, err := insert.Exec(groupName, maxGrade)
 	if err != nil{
 		log.Fatal(err)
 		return c.NoContent(http.StatusInternalServerError)
