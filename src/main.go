@@ -42,6 +42,7 @@ func main() {
   e.PATCH("/group/quit", group.Quit)
   e.PATCH("/group/host-update", group.HostUpdate)
   // e.POST("/subject/register", subject.Register)
+  e.POST("/subject/target", subject.Target)
   e.GET("/subject/load-subject", subject.LoadSubject)
   e.GET("/evaluation/fetch", evaluation.Fetch)
   e.POST("/evaluation/register", evaluation.Register)
