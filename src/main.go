@@ -42,6 +42,7 @@ func main() {
   e.PATCH("/group/quit", group.Quit)
   e.PATCH("/group/host-update", group.HostUpdate)
   // e.POST("/subject/register", subject.Register)
+  e.POST("/subject/target", subject.Target)
   e.GET("/subject/load-subject", subject.LoadSubject)
   e.POST("/evaluation/register", evaluation.Register)
   e.POST("/evaluation/purchase", evaluation.Purchase)
@@ -51,5 +52,5 @@ func main() {
   // e.PUT("/good", good.Reverse)
 
   // サーバーをポート番号8080で起動
-  e.Logger.Fatal(e.Start(":8080"))
+  e.Logger.Fatal(e.Start(":8081"))
 }
