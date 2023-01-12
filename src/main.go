@@ -52,5 +52,5 @@ func main() {
   // e.PUT("/good", good.Reverse)
 
   // サーバーをポート番号8080で起動
-  e.Logger.Fatal(e.Start(":8081"))
+  e.Logger.Fatal(e.Start(":8080"))
 }
