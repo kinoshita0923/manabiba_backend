@@ -1,6 +1,7 @@
 package evaluation
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -10,9 +11,70 @@ import (
 	"src/lib/jwt"
 )
 
+type Evaluation struct {
+	EvaluationId	int
+	Evaluation		int
+	Comment			string
+	TeacherName		string
+	Term			int
+	StudyTime		float64
+}
+
+type Evaluations struct {
+	Evaluations []Evaluation
+}
+
+func Fetch(c echo.Context) error {
+	subjectId := c.QueryParam("subject_id")
+
+	tokenCookie, err := c.Cookie("token")
+	if err != nil {
+		return c.String(http.StatusOK, "No token")
+	}
+	tokenText := tokenCookie.Value
+	userId := jwt.ParseToken(tokenText).(float64)
+
+	// データベースのハンドルを取得
+	db := database.Connect()
+	defer db.Close()
+
+	// DBにクエリを送信
+	rows, err := db.Query(
+		"SELECT	evaluation_id, evaluation, comment, teacher_name, term, study_time FROM evaluations NATURAL JOIN viewable_contents WHERE subject_id = ? AND user_id = ?	AND confirm_genre = FALSE;",
+		subjectId,
+		userId,
+	)
+	if err != nil {
+		log.Fatal(err)
+		return c.NoContent(http.StatusInternalServerError)
+	}
+	defer rows.Close()
+
+	// 結果を代入
+	evaluations := &Evaluations{}
+	for rows.Next() {
+		evaluation := &Evaluation{}
+		err := rows.Scan(&evaluation.EvaluationId, &evaluation.Evaluation, &evaluation.Comment, &evaluation.TeacherName, &evaluation.Term, &evaluation.StudyTime)
+
+		if len(evaluations.Evaluations) == 0 {
+			evaluations.Evaluations = []Evaluation{*evaluation}
+		} else {
+			evaluations.Evaluations = append(evaluations.Evaluations, *evaluation)
+		}
+
+		if err != nil {
+			return c.NoContent(http.StatusInternalServerError)
+		}
+	}
+
+	fmt.Println(evaluations)
+
+	return c.JSON(http.StatusOK, evaluations)
+}
+
 func Register(c echo.Context) error {
 	subjectId	:= c.FormValue("subject_id")
-	valuation	:= c.FormValue("valuation")
+	evaluation	:= c.FormValue("evaluation")
 	comment		:= c.FormValue("comment")
 	teacherName	:= c.FormValue("teacher_name")
 	term		:= c.FormValue("term")
@@ -31,7 +93,7 @@ func Register(c echo.Context) error {
 	defer db.Close()
 
 	// SQL文を定義
-	insert, err := db.Prepare("INSERT INTO evaluations(subject_id, user_id, valuation, comment, teacher_name, term, study_time) VALUES(?, ?, ?, ?, ?, ?, ?);")
+	insert, err := db.Prepare("INSERT INTO evaluations(subject_id, user_id, evaluation, comment, teacher_name, term, study_time) VALUES(?, ?, ?, ?, ?, ?, ?);")
 	if err != nil {
 		log.Fatal(err)
 		return c.NoContent(http.StatusInternalServerError)
@@ -39,7 +101,7 @@ func Register(c echo.Context) error {
 	defer insert.Close()
 
 	// SQLの実行
-	_, err = insert.Exec(subjectId, userId, valuation, comment, teacherName, term, studyTime)
+	_, err = insert.Exec(subjectId, userId, evaluation, comment, teacherName, term, studyTime)
 	if err != nil{
 		log.Fatal(err)
 		return c.NoContent(http.StatusInternalServerError)
