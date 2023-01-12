@@ -17,6 +17,7 @@ erDiagram
 
     classes {
         int class_id
+        int group_id
         int grade
         varchar class_name
     }
